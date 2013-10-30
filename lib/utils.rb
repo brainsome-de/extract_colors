@@ -6,7 +6,7 @@ module Utils
 
     # get all scss files except the config
     def all_scss_files(dir)
-      excludes = /(_config|_colors|reset)\.css\.scss\Z/
+      excludes = /(_config|reset)\.css\.scss\Z/
       Dir.glob(File.join(dir, '*.scss')).reject { |path| path =~ excludes }
     end
 
@@ -66,11 +66,13 @@ module Utils
       
       color_swatches = ''
       all_colors.each_with_index do |color, index|
-        style = "background-color: #{color}; width: 200px; height: 200px; display: inline-block; margin: 20px; padding: 20px; font: Helvetica;font-weight: bold; font-size: 16px;"
-        color_swatches << "<div style='#{style}'>$color#{index} = #{color};</div>"
+        style = "text-align: center; border: 1px solid #bbb; background-color: #{color.rgba}; width: 200px; height: 200px; display: inline-block; margin: 20px; padding: 20px; font-family: Helvetica; font-size: 16px;"
+        color_swatches << "<div style='#{style}'>$color#{index}<br />#{color.rgba}<br />#{color.hex}</div>"
       end
       
-      html_file = 'tmp/color_swatches.html'
+      require 'tmpdir'
+      temp_dir  = Dir.tmpdir() 
+      html_file = File.join(temp_dir, 'color_swatches.html')
       File.open(html_file, 'w') { |f| f.write(color_swatches) }
       `open #{html_file}`
     end
